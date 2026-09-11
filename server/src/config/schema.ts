@@ -9,7 +9,7 @@ import {
 
 export const USER_ROLES = ["user", "admin"] as const;
 
-export const POST_STATUS = ["delete", "published"] as const;
+export const POST_STATUS = ["deleted", "published"] as const;
 
 // USERS
 export const usersTable = mysqlTable("users", {
@@ -18,6 +18,34 @@ export const usersTable = mysqlTable("users", {
   email: varchar("email", { length: 100 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   role: mysqlEnum("role", USER_ROLES).notNull().default("user"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+// CATEGORIES
+export const categoriesTable = mysqlTable("categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+});
+
+// POSTS
+export const postsTable = mysqlTable("posts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id")
+    .notNull()
+    .references(() => usersTable.id, {
+      onDelete: "cascade",
+    }),
+  categoryId: int("category_id")
+    .notNull()
+    .references(() => categoriesTable.id),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  imageUrl: text("image_url"),
+  imagePublicId: varchar("image_public_id", {
+    length: 255,
+  }),
+  status: mysqlEnum("status", POST_STATUS).notNull().default("published"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });

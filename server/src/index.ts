@@ -1,5 +1,6 @@
 import express from "express";
 import authRouter from "./routes/auth/auth.route";
+import postsRouter from "./routes/posts/posts.route";
 
 const app = express();
 const PORT = 3000;
@@ -15,3 +16,4 @@ app.listen(PORT, () => {
 app.use(express.json());
 
 app.use('/api/v1/auth', authRouter);
+app.use("/api/v1/posts", postsRouter);
