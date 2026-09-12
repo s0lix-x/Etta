@@ -6,7 +6,7 @@ import {
   updatePostSchema,
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
-import { postsTable } from "../../config/schema";
+import { categoriesTable, postsTable, usersTable } from "../../config/schema";
 import { and, desc, eq } from "drizzle-orm";
 import {
   deleteFromCloudinary,
@@ -62,8 +62,25 @@ export class PostsController {
   getPosts = async (req: Request, res: Response) => {
     try {
       const posts = await db
-        .select()
+        .select({
+          id: postsTable.id,
+          userId: postsTable.userId,
+          categoryId: postsTable.categoryId,
+          title: postsTable.title,
+          content: postsTable.content,
+          imageUrl: postsTable.imageUrl,
+          status: postsTable.status,
+          createdAt: postsTable.createdAt,
+          updatedAt: postsTable.updatedAt,
+          username: usersTable.username,
+          category: categoriesTable.name,
+        })
         .from(postsTable)
+        .leftJoin(usersTable, eq(postsTable.userId, usersTable.id))
+        .leftJoin(
+          categoriesTable,
+          eq(postsTable.categoryId, categoriesTable.id),
+        )
         .where(eq(postsTable.status, "published"))
         .orderBy(desc(postsTable.createdAt));
 

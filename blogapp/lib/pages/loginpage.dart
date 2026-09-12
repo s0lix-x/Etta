@@ -49,8 +49,6 @@ class _LoginFormState extends State<LoginForm> {
 
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-      if (!mounted) return;
-
       if (response.statusCode == 200) {
         authToken = responseData['data']['token'];
         ScaffoldMessenger.of(
