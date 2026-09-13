@@ -7,7 +7,7 @@ import {
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
 import { categoriesTable, postsTable, usersTable } from "../../config/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, like } from "drizzle-orm";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
@@ -61,6 +61,11 @@ export class PostsController {
   // Guests: Get All
   getPosts = async (req: Request, res: Response) => {
     try {
+      const search = String(req.query.search ?? "").trim();
+      const searchCondition = search
+        ? like(postsTable.title, `%${search}%`)
+        : undefined;
+
       const posts = await db
         .select({
           id: postsTable.id,
@@ -81,7 +86,11 @@ export class PostsController {
           categoriesTable,
           eq(postsTable.categoryId, categoriesTable.id),
         )
-        .where(eq(postsTable.status, "published"))
+        .where(
+          searchCondition
+            ? and(eq(postsTable.status, "published"), searchCondition)
+            : eq(postsTable.status, "published"),
+        )
         .orderBy(desc(postsTable.createdAt));
 
       return res.status(200).json({
