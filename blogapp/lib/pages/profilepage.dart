@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:blogapp/pages/loginpage.dart';
+import 'package:blogapp/pages/editpage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -110,16 +111,44 @@ class ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             const SizedBox(height: 14),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.edit_outlined, size: 18),
-                                SizedBox(width: 6),
-                                Text('Edit'),
-                                SizedBox(width: 20),
-                                Icon(Icons.delete_outline, size: 18),
-                              ],
-                            ),
+                             Row(
+  mainAxisAlignment: MainAxisAlignment.end,
+  children: [
+    GestureDetector(
+      onTap: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditPage(
+              post: post,
+            ),
+          ),
+        );
+
+        if (result == true) {
+          getPosts();
+        }
+      },
+      child:  Row(
+        children: [
+          Icon(
+            Icons.edit_outlined,
+            size: 18,
+          ),
+          SizedBox(width: 6),
+          Text('Edit'),
+        ],
+      ),
+    ),
+
+     SizedBox(width: 20),
+
+     Icon(
+      Icons.delete_outline,
+      size: 18,
+    ),
+  ],
+),
                           ],
                         ),
                       ),
