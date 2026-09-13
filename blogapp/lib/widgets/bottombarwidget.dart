@@ -1,4 +1,5 @@
 import 'package:blogapp/pages/createpage.dart';
+import 'package:blogapp/pages/discoverpage.dart';
 import 'package:blogapp/pages/feedpage.dart';
 import 'package:blogapp/pages/profilepage.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,20 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         item: ItemConfig(
           icon: const Icon(Icons.menu_book_outlined, size: 24),
           title: "FEED",
+          activeForegroundColor: const Color(0xffb84a2a),
+          inactiveForegroundColor: const Color(0xff666666),
+          textStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+      PersistentTabConfig(
+        screen: const DiscoverPage(),
+        item: ItemConfig(
+          icon: const Icon(Icons.explore_outlined, size: 24),
+          title: "DISCOVER",
           activeForegroundColor: const Color(0xffb84a2a),
           inactiveForegroundColor: const Color(0xff666666),
           textStyle: const TextStyle(
