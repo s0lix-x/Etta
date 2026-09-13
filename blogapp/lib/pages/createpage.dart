@@ -46,7 +46,11 @@ class _CreatePageState extends State<CreatePage> {
   }
 
   Future<void> pickImage() async {
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50, maxWidth: 1920);
+    final pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxWidth: 1920,
+    );
 
     if (pickedImage != null) {
       setState(() {
@@ -207,7 +211,6 @@ class _CreatePageState extends State<CreatePage> {
                           width: double.infinity,
                           height: 220,
                           fit: BoxFit.cover,
-
                         ),
                 ),
               ),

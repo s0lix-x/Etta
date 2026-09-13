@@ -14,6 +14,7 @@ class BottomBarWidget extends StatefulWidget {
 class _BottomBarWidgetState extends State<BottomBarWidget> {
   final controller = PersistentTabController(initialIndex: 0);
   final feedKey = GlobalKey<FeedPageState>();
+  final profileKey = GlobalKey<ProfilePageState>();
 
   List<PersistentTabConfig> _tabs() {
     return [
@@ -35,6 +36,7 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         screen: CreatePage(
           onPublished: () {
             feedKey.currentState?.getPosts();
+            profileKey.currentState?.getPosts();
             controller.jumpToTab(0);
           },
         ),
@@ -51,7 +53,10 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         ),
       ),
       PersistentTabConfig(
-        screen: ProfilePage(),
+        screen: ProfilePage(
+          key: profileKey,
+          onPostsChanged: () => feedKey.currentState?.getPosts(),
+        ),
         item: ItemConfig(
           icon: const Icon(Icons.person, size: 24),
           title: "PROFILE",
