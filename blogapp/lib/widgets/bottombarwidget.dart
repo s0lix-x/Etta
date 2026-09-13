@@ -1,19 +1,45 @@
-
+import 'package:blogapp/pages/createpage.dart';
 import 'package:blogapp/pages/feedpage.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-
-class BottomBarWidget extends StatelessWidget {
+class BottomBarWidget extends StatefulWidget {
   const BottomBarWidget({super.key});
+
+  @override
+  State<BottomBarWidget> createState() => _BottomBarWidgetState();
+}
+
+class _BottomBarWidgetState extends State<BottomBarWidget> {
+  final controller = PersistentTabController(initialIndex: 0);
+  final feedKey = GlobalKey<FeedPageState>();
 
   List<PersistentTabConfig> _tabs() {
     return [
       PersistentTabConfig(
-        screen: const FeedPage(),
+        screen: FeedPage(key: feedKey),
         item: ItemConfig(
           icon: const Icon(Icons.menu_book_outlined, size: 24),
           title: "FEED",
+          activeForegroundColor: const Color(0xffb84a2a),
+          inactiveForegroundColor: const Color(0xff666666),
+          textStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+      PersistentTabConfig(
+        screen: CreatePage(
+          onPublished: () {
+            feedKey.currentState?.getPosts();
+            controller.jumpToTab(0);
+          },
+        ),
+        item: ItemConfig(
+          icon: const Icon(Icons.edit_outlined, size: 24),
+          title: "WRITE",
           activeForegroundColor: const Color(0xffb84a2a),
           inactiveForegroundColor: const Color(0xff666666),
           textStyle: const TextStyle(
@@ -30,9 +56,9 @@ class BottomBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return PersistentTabView(
       tabs: _tabs(),
-      navBarBuilder: (navBarConfig) => Style1BottomNavBar(
-        navBarConfig: navBarConfig,
-      ),
+      controller: controller,
+      navBarBuilder: (navBarConfig) =>
+          Style1BottomNavBar(navBarConfig: navBarConfig),
     );
   }
 }

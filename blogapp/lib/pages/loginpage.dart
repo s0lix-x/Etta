@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-String? authToken;
+String authToken = '';
+int userId = 0;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -51,6 +52,7 @@ class _LoginFormState extends State<LoginForm> {
 
       if (response.statusCode == 200) {
         authToken = responseData['data']['token'];
+        userId = responseData['data']['user']['id'];
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Login berhasil')));
