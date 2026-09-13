@@ -1,5 +1,6 @@
 import 'package:blogapp/pages/feedpage.dart';
 import 'package:blogapp/pages/loginpage.dart';
+import 'package:blogapp/pages/profilepage.dart';
 import 'package:blogapp/pages/registerpage.dart';
 import 'package:blogapp/widgets/bottombarwidget.dart';
 import 'package:flutter/material.dart';

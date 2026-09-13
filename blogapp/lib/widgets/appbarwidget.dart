@@ -24,27 +24,6 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.search_outlined,
-            size: 24,
-            color: Color(0xff111111),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.person,
-              size: 24,
-              color: Color(0xff111111),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
