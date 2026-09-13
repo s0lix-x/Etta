@@ -5,6 +5,7 @@ import 'dart:convert';
 
 String authToken = '';
 int userId = 0;
+String username = '';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -53,6 +54,7 @@ class _LoginFormState extends State<LoginForm> {
       if (response.statusCode == 200) {
         authToken = responseData['data']['token'];
         userId = responseData['data']['user']['id'];
+        username = responseData['data']['user']['username'];
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Login berhasil')));
