@@ -20,6 +20,16 @@ class ProfilePageState extends State<ProfilePage> {
   List posts = [];
   bool isLoading = true;
 
+  void logout() {
+    authToken = '';
+    userId = 0;
+    username = '';
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).pushNamedAndRemoveUntil('/login', (route) => false);
+  }
+
   Future<void> getPosts() async {
     try {
       final response = await http.get(
@@ -66,10 +76,7 @@ class ProfilePageState extends State<ProfilePage> {
               const SizedBox(width: 10),
               const Text(
                 'Delete this article?',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -114,10 +121,7 @@ class ProfilePageState extends State<ProfilePage> {
               ),
               child: const Text(
                 'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
             ElevatedButton(
@@ -135,10 +139,7 @@ class ProfilePageState extends State<ProfilePage> {
               ),
               child: const Text(
                 'Delete Article',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -195,21 +196,67 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: const Color(0xfffaf9f5),
       appBar: const AppBarWidget(),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : posts.isEmpty
-          ? const Center(
-              child: Text(
-                'Belum ada artikel.',
-                style: TextStyle(color: Color(0xff777777)),
+      body: ListView.builder(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+        itemCount: isLoading || posts.isEmpty ? 1 : posts.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.person_outline,
+                        size: 30,
+                        color: Color(0xff555555),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        username,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff222222),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextButton.icon(
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    onPressed: logout,
+                    icon: const Icon(Icons.logout, color: Color(0xffb84a2a)),
+                    label: const Text(
+                      'LOG OUT',
+                      style: TextStyle(
+                        color: Color(0xffb84a2a),
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(24),
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return GestureDetector(
+            );
+          }
+
+          final post = posts[index - 1];
+          return isLoading
+              ? const SizedBox(
+                  height: 300,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              : posts.isEmpty
+              ? const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    'Belum ada artikel.',
+                    style: TextStyle(color: Color(0xff777777)),
+                  ),
+                )
+              : GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -299,8 +346,8 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 );
-              },
-            ),
+        },
+      ),
     );
   }
 }
