@@ -62,8 +62,12 @@ export class PostsController {
   getPosts = async (req: Request, res: Response) => {
     try {
       const search = String(req.query.search ?? "").trim();
+      const categoryId = Number(req.query.categoryId);
       const searchCondition = search
         ? like(postsTable.title, `%${search}%`)
+        : undefined;
+      const categoryCondition = categoryId > 0
+        ? eq(postsTable.categoryId, categoryId)
         : undefined;
 
       const posts = await db
@@ -86,11 +90,11 @@ export class PostsController {
           categoriesTable,
           eq(postsTable.categoryId, categoriesTable.id),
         )
-        .where(
-          searchCondition
-            ? and(eq(postsTable.status, "published"), searchCondition)
-            : eq(postsTable.status, "published"),
-        )
+        .where(and(
+          eq(postsTable.status, "published"),
+          ...(searchCondition ? [searchCondition] : []),
+          ...(categoryCondition ? [categoryCondition] : []),
+        ))
         .orderBy(desc(postsTable.createdAt));
 
       return res.status(200).json({

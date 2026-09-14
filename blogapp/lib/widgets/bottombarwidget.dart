@@ -1,4 +1,5 @@
 import 'package:blogapp/pages/createpage.dart';
+import 'package:blogapp/pages/categorypage.dart';
 import 'package:blogapp/pages/discoverpage.dart';
 import 'package:blogapp/pages/feedpage.dart';
 import 'package:blogapp/pages/profilepage.dart';
@@ -58,6 +59,20 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
         item: ItemConfig(
           icon: const Icon(Icons.edit_outlined, size: 24),
           title: "WRITE",
+          activeForegroundColor: const Color(0xffb84a2a),
+          inactiveForegroundColor: const Color(0xff666666),
+          textStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+      PersistentTabConfig(
+        screen: const CategoryPage(),
+        item: ItemConfig(
+          icon: const Icon(Icons.grid_view_outlined, size: 24),
+          title: "KATEGORI",
           activeForegroundColor: const Color(0xffb84a2a),
           inactiveForegroundColor: const Color(0xff666666),
           textStyle: const TextStyle(
