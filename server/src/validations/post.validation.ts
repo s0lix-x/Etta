@@ -25,6 +25,7 @@ export const updatePostParamsSchema = z.object({
 });
 
 export const updatePostSchema = z.object({
+  categoryId: z.coerce.number().int().positive(),
   title: z.string().min(3).max(255).optional(),
   content: z.string().min(10).optional(),
 });

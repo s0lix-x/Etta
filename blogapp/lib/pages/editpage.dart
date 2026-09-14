@@ -32,7 +32,8 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
 
-    selectedCategoryId = widget.post['categoryId'] ?? 0;
+    selectedCategoryId =
+        int.tryParse(widget.post['categoryId'].toString()) ?? 0;
 
     getCategories();
   }
@@ -73,6 +74,8 @@ class _EditPageState extends State<EditPage> {
     });
 
     try {
+      debugPrint('Category yang dikirim: $selectedCategoryId');
+
       final response = await http.patch(
         Uri.parse('http://localhost:5000/api/v1/posts/${widget.post['id']}'),
         headers: {
@@ -82,6 +85,7 @@ class _EditPageState extends State<EditPage> {
         body: jsonEncode({
           'title': titleController.text.trim(),
           'content': contentController.text.trim(),
+          'categoryId': selectedCategoryId,
         }),
       );
 
@@ -89,7 +93,12 @@ class _EditPageState extends State<EditPage> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Artikel berhasil diupdate')),
+          SnackBar(
+            content: Text(
+              'Terkirim $selectedCategoryId - tersimpan '
+              '${responseData['data']['post']['categoryId']}',
+            ),
+          ),
         );
 
         Navigator.pop(context, true);
@@ -187,10 +196,13 @@ class _EditPageState extends State<EditPage> {
 
                 child: Row(
                   children: categories.map((category) {
+                    final categoryId =
+                        int.tryParse(category['id'].toString()) ?? 0;
+
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          selectedCategoryId = category['id'];
+                          selectedCategoryId = categoryId;
                         });
                       },
 
@@ -203,7 +215,7 @@ class _EditPageState extends State<EditPage> {
                         ),
 
                         decoration: BoxDecoration(
-                          color: selectedCategoryId == category['id']
+                          color: selectedCategoryId == categoryId
                               ? const Color(0xffb84a2a)
                               : const Color(0xffe8e7e3),
                           borderRadius: BorderRadius.circular(20),
@@ -214,7 +226,7 @@ class _EditPageState extends State<EditPage> {
 
                           style: TextStyle(
                             fontSize: 12,
-                            color: selectedCategoryId == category['id']
+                            color: selectedCategoryId == categoryId
                                 ? Colors.white
                                 : const Color(0xff555555),
                           ),

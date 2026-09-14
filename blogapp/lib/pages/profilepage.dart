@@ -317,6 +317,7 @@ class ProfilePageState extends State<ProfilePage> {
 
                                 if (result == true) {
                                   getPosts();
+                                  widget.onPostsChanged?.call();
                                 }
                               },
                               child: Row(

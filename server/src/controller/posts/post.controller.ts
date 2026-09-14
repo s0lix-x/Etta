@@ -7,7 +7,7 @@ import {
 } from "../../validations/post.validation";
 import { db } from "../../config/db";
 import { categoriesTable, postsTable, usersTable } from "../../config/schema";
-import { and, desc, eq, like } from "drizzle-orm";
+import { and, desc, eq, like, sql } from "drizzle-orm";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
@@ -158,7 +158,8 @@ export class PostsController {
 
       // VALIDATE BODY
       const validateData = updatePostSchema.parse(req.body);
-      const { title, content } = validateData;
+      const { categoryId, title, content } = validateData;
+      console.log("Update categoryId:", categoryId);
 
       // CEK POST
       const [existingPost] = await db
@@ -208,6 +209,14 @@ export class PostsController {
         })
         .where(eq(postsTable.id, id));
 
+      await db.execute(
+        sql`UPDATE posts SET category_id = ${Number(categoryId)} WHERE id = ${id}`,
+      );
+
+      const [savedCategory] = await db.execute(
+        sql`SELECT category_id FROM posts WHERE id = ${id}`,
+      );
+
       // AMBIL UPDATE TERBARU
       const [updatedPost] = await db
         .select()
@@ -220,6 +229,7 @@ export class PostsController {
         message: "Post updated successfully",
         data: {
           post: updatedPost,
+          categoryId: (savedCategory as any)[0].category_id,
         },
       });
     } catch (error: any) {
